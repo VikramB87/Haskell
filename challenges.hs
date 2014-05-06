@@ -148,9 +148,24 @@ random_select_elem xs = do
 
 -- 23b. Extract a given number of randomly selected elements from a list
 
---random_select [] _ = []
---random_select _ 0 = []
-random_select :: [a] -> Int -> IO [a]
-random_select xs n = do
-                        num <- getStdRandom (randomR(0, (length xs)-1))
-                        return $ (xs!!num) : (random_select (removeAt xs num) (n-1))
+--random_select :: (Show a) => [a] -> Int -> IO [a]
+random_select xs n = if (n == 0 || null xs) then return []
+                    else
+                        do
+                            num <- getStdRandom (randomR(0, (length xs)-1))
+                            ys <- (random_select (removeAt xs (num+1)) (n-1))
+                            return $ (xs!!num) : ys
+
+-- 24. Draw N different random numbers from the set 1..M
+
+random_select2 n m = random_select [1..m] n
+
+
+-- 25. Generate Random Permutation of Elements
+
+permute xs = if null xs then return []
+             else
+                do
+                    num <- getStdRandom (randomR(0, (length xs)-1))
+                    ys <- permute $ removeAt xs (num+1)
+                    return $ (xs!!num) : ys
