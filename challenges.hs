@@ -11,6 +11,11 @@ myLast3 = head . reverse
 
 myLast4 xs = elementAt (length xs) xs
 
+myLast5 xs = foldr1 (const id)
+myLast6 xs = foldr1 (curry snd)
+
+myLast7 xs = foldl1 (flip const)
+
 -- 2. Last but one element of List
 myButLast xs = if length xs < 2 then error "List must of length > 1" else
                 if length (tail xs) == 2 then head $ tail xs else myButLast $ tail xs
@@ -22,6 +27,8 @@ myButLast2 (_:x:xs)  = myButLast2 (x:xs)
 
 myButLast3 xs = elementAt ((length xs) - 1) xs
 
+myButLast4 xs = head . tail . reverse
+
 -- 3. Kth element of a list
 
 elementAt _ [] = error "Invalid index"
@@ -30,10 +37,14 @@ elementAt k xs = elementAt (k-1) $ tail xs
 
 elementAt2 k xs = myLast $ take k xs
 
+elementAt3 k xs = fst $ last $ zip xs [1..k]
+
 -- 4. Number of elements in a list
 
 myLength [] = 0
 myLength (x:xs) = 1+myLength xs
+
+myLength2 xs = foldl (\a _ -> a+1) 0 xs
 
 -- 5. Reverse a list
 
@@ -169,3 +180,10 @@ permute xs = if null xs then return []
                     num <- getStdRandom (randomR(0, (length xs)-1))
                     ys <- permute $ removeAt xs (num+1)
                     return $ (xs!!num) : ys
+
+-- 26. Generate all combinations of a given size of a list
+
+combinations _ [] = []
+combinations 0 _  = []
+combinations n xs = snd $ foldl (\(i, ys) x -> (i+1, ys++(removeAt xs i))) (1, []) xs
+
