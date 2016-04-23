@@ -13,4 +13,6 @@ commonDivisors m n = toList $ Set.intersection (Set.fromList $ divisors m) (Set.
 main = do
         input <- getLine
         input <- getContents
-        print $ Prelude.map (\line -> Prelude.map (\w -> read w::Int) (words line)) (lines input)
+        mapM (putStrLn. show) $ Prelude.map fun (Prelude.map (\line -> Prelude.map (\w -> read w::Int) (words line)) (lines input))
+       where
+        fun lst = length $ commonDivisors (head lst) (last lst)
